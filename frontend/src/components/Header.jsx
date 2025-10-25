@@ -88,7 +88,9 @@ export default function Header() {
 
                     {/* Mobile Icons */}
                     <div className="flex items-center space-x-4 md:hidden">
-                        <ShoppingCart className="text-yellow-400 cursor-pointer" size={22} />
+                        <Link to="/cart">
+                            <ShoppingCart className="text-yellow-400 cursor-pointer" size={22} />
+                        </Link>
                         <Search
                             className="text-yellow-400 cursor-pointer"
                             size={22}
