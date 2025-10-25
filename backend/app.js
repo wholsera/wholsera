@@ -15,6 +15,8 @@ connectToDB();
 app.use(cors({
     origin: process.env.CLIENT_PORT,
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
 }));
 
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));

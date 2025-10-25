@@ -55,6 +55,7 @@ module.exports.registerUser = async (req, res) => {
             httpOnly: true,
             secure: true,      // set true in production (HTTPS required)
             sameSite: "none",
+            path: "/",
             maxAge: 24 * 60 * 60 * 1000, // 24 hour
         });
 
@@ -100,6 +101,7 @@ module.exports.loginUser = async (req, res) => {
             httpOnly: true,
             secure: true,      // set true in production (HTTPS required)
             sameSite: "none",
+            path: "/",
             maxAge: 24 * 60 * 60 * 1000, // 24 hour
         });
 
