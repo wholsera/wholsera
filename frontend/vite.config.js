@@ -7,4 +7,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    historyApiFallback: true, // 👈 allows React Router to handle all routes locally
+  }
 })
