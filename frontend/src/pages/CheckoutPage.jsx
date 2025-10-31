@@ -8,6 +8,7 @@ import axios from "axios";
 export default function CheckoutPage() {
     const navigate = useNavigate();
     const { cart, setCart } = useCart();
+
     const [address, setAddress] = useState({
         fullName: "",
         phone: "",
@@ -17,10 +18,19 @@ export default function CheckoutPage() {
         pincode: "",
     });
 
+    const [randomCode, setRandomCode] = useState("");
+    const [enteredCode, setEnteredCode] = useState("");
+
     useEffect(() => {
         fetchCartData();
         window.scrollTo(0, 0);
+        generateRandomCode();
     }, []);
+
+    const generateRandomCode = () => {
+        const code = Math.floor(1000 + Math.random() * 9000); // Generate 4-digit code
+        setRandomCode(code.toString());
+    };
 
     const fetchCartData = async () => {
         try {
@@ -31,22 +41,14 @@ export default function CheckoutPage() {
                 setCart([]);
             }
         } catch (err) { }
-    }
-
-    // ✅ Validation helpers
-    const isValidPincode = (pincode) => {
-        return /^[1-9][0-9]{5}$/.test(pincode); // Must be 6 digits and not start with 0
     };
 
-    const isValidPhone = (phone) => {
-        // Must start with 6–9, be 10 digits, and not all same digits
-        return /^[6-9]\d{9}$/.test(phone) && !/^(\d)\1{9}$/.test(phone);
-    };
+    const isValidPincode = (pincode) => /^[1-9][0-9]{5}$/.test(pincode);
+    const isValidPhone = (phone) =>
+        /^[6-9]\d{9}$/.test(phone) && !/^(\d)\1{9}$/.test(phone);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-
-        // ✅ Restrict only phone and pincode inputs
         if (name === "phone") {
             if (/^\d{0,10}$/.test(value)) setAddress({ ...address, [name]: value });
         } else if (name === "pincode") {
@@ -56,23 +58,15 @@ export default function CheckoutPage() {
         }
     };
 
-    // Calculate item total with tax
     const calculateItemTotal = (item) => {
         const basePrice = item.unitPrice * item.quantity;
         const taxRate = item.taxRate || 0;
         const taxType = item.taxType || "inclusive";
-
-        if (taxType === "exclusive") {
-            // Tax is added on top
-            const taxAmount = (basePrice * taxRate) / 100;
-            return basePrice + taxAmount;
-        } else {
-            // Tax is inclusive (already in price)
-            return basePrice;
-        }
+        return taxType === "exclusive"
+            ? basePrice + (basePrice * taxRate) / 100
+            : basePrice;
     };
 
-    // Calculate subtotal (sum of all item totals including exclusive tax)
     const subtotal = cart.reduce((sum, item) => sum + calculateItemTotal(item), 0);
     const shipping = subtotal > 5000 ? 0 : 500;
     const total = subtotal + shipping;
@@ -100,6 +94,12 @@ export default function CheckoutPage() {
             return;
         }
 
+        // ✅ Verify random confirmation code
+        if (enteredCode.trim() !== randomCode) {
+            toast.error("Code not matched. Please try again!");
+            return;
+        }
+
         try {
             toast.promise(
                 axios.post("/users/createOrder", { address, cart, total }),
@@ -110,11 +110,9 @@ export default function CheckoutPage() {
                 }
             ).then((res) => {
                 const orderNumber = res.data.orderNumber;
-
-                // Clear cart (optional)
                 setCart([]);
                 navigate(`/order-success/${orderNumber}`);
-            })
+            });
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to place order");
             console.error("Error updating product:", error);
@@ -215,23 +213,33 @@ export default function CheckoutPage() {
 
                             <div className="space-y-4 max-h-96 overflow-y-auto pr-2 custom-scrollbar">
                                 {cart.map((item, index) => {
-                                    const basePrice = item.unitPrice * item.quantity;
-                                    const taxRate = item.taxRate || 0;
-                                    const taxType = item.taxType || "inclusive";
                                     const itemTotal = calculateItemTotal(item);
-
                                     return (
-                                        <div key={index} className="p-4 bg-gray-900/60 rounded-xl border border-gray-700/30 hover:border-gray-600/50 transition-all">
+                                        <div
+                                            key={index}
+                                            className="p-4 bg-gray-900/60 rounded-xl border border-gray-700/30 hover:border-gray-600/50 transition-all"
+                                        >
                                             <div className="flex items-start gap-4">
-                                                <div className="w-16 h-16 bg-gradient-to-br from-gray-700 to-gray-800 rounded-lg flex items-center justify-center flex-shrink-0">
-                                                    <Package size={28} className="text-gray-400" />
+                                                <div className="w-16 h-16 rounded-lg overflow-hidden">
+                                                    <img
+                                                        src={item.mainImage}
+                                                        alt={item.productName}
+                                                        className="w-full h-full object-cover"
+                                                    />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <h3 className="font-semibold text-white mb-1 truncate">{item.productName}</h3>
-                                                    <p className="text-sm text-gray-400 mb-2">₹{item.unitPrice} × {item.quantity}</p>
-                                                    {taxRate > 0 && (
+                                                    <h3 className="font-semibold text-white mb-1 truncate">
+                                                        {item.productName}
+                                                    </h3>
+                                                    <p className="text-sm text-gray-400 mb-2">
+                                                        ₹{item.unitPrice} × {item.quantity}
+                                                    </p>
+                                                    {item.taxRate > 0 && (
                                                         <div className="text-xs text-gray-500">
-                                                            Tax: {taxRate}% {taxType === "inclusive" ? "(Incl.)" : "(Excl.)"}
+                                                            Tax: {item.taxRate}%{" "}
+                                                            {item.taxType === "inclusive"
+                                                                ? "(Incl.)"
+                                                                : "(Excl.)"}
                                                         </div>
                                                     )}
                                                 </div>
@@ -279,7 +287,9 @@ export default function CheckoutPage() {
                             <div className="space-y-4 mb-6">
                                 <div className="flex justify-between items-center text-gray-300">
                                     <span className="text-base">Subtotal (with taxes)</span>
-                                    <span className="font-semibold text-lg">₹{subtotal.toFixed(2)}</span>
+                                    <span className="font-semibold text-lg">
+                                        ₹{subtotal.toFixed(2)}
+                                    </span>
                                 </div>
 
                                 <div className="flex justify-between items-center text-gray-300">
@@ -299,7 +309,8 @@ export default function CheckoutPage() {
                                 {subtotal < 5000 && subtotal > 0 && (
                                     <div className="bg-orange-500/10 border border-orange-500/20 rounded-lg p-3">
                                         <p className="text-xs text-orange-300">
-                                            Add ₹{(5000 - subtotal).toFixed(2)} more for FREE shipping!
+                                            Add ₹{(5000 - subtotal).toFixed(2)} more for FREE
+                                            shipping!
                                         </p>
                                     </div>
                                 )}
@@ -309,6 +320,32 @@ export default function CheckoutPage() {
                                     <span className="text-2xl font-black bg-gradient-to-r from-orange-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
                                         ₹{total.toFixed(2)}
                                     </span>
+                                </div>
+                            </div>
+
+                            {/* ✅ Confirmation Code Section */}
+                            <div className="bg-gray-800/50 border border-gray-700/40 rounded-xl p-4 mb-4 mt-6">
+                                <p className="text-sm text-gray-400 mb-3">
+                                    To confirm your order, please type the code below:
+                                </p>
+                                <div className="flex flex-col sm:flex-row items-center gap-3">
+                                    <div className="text-2xl font-bold bg-gradient-to-r from-orange-400 to-pink-400 bg-clip-text text-transparent tracking-wider">
+                                        {randomCode}
+                                    </div>
+                                    <input
+                                        type="text"
+                                        value={enteredCode}
+                                        onChange={(e) => setEnteredCode(e.target.value)}
+                                        maxLength={4}
+                                        placeholder="Enter code"
+                                        className="w-full sm:flex-1 p-3 rounded-lg bg-gray-900/80 border border-gray-700/40 focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400/20 transition-all placeholder:text-gray-500 text-center text-lg"
+                                    />
+                                    <button
+                                        onClick={generateRandomCode}
+                                        className="text-sm text-orange-400 hover:text-pink-400 underline whitespace-nowrap cursor-pointer"
+                                    >
+                                        Regenerate
+                                    </button>
                                 </div>
                             </div>
 

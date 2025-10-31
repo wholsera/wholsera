@@ -133,7 +133,11 @@ module.exports.deleteSubcategory = async (req, res) => {
             return res.status(400).json({ status: false, message: "Invalid subcategory index" });
         }
 
-        const productExists = await productModel.findOne({ category: categoryId });
+        const productExists = await productModel.findOne({
+            category: categoryId,
+            subcategory: subcategoryName
+        });
+
         if (productExists) {
             return res.status(400).json({ status: false, message: "Products exist in this subcategory" });
         }

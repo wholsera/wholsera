@@ -2,9 +2,8 @@ import { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Eye, EyeOff, Mail, Lock, Building, User, Phone } from 'lucide-react';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { AuthContext } from '../context/AuthContext';
-import { ArrowRight } from 'lucide-react';
 
 export default function AuthHeroPage() {
     const [isLogin, setIsLogin] = useState(true);
@@ -20,7 +19,7 @@ export default function AuthHeroPage() {
     });
 
     const navigate = useNavigate();
-    const { login } = useContext(AuthContext);
+    const { user, login } = useContext(AuthContext);
 
     const handleInputChange = (e) => {
         setFormData({
@@ -79,6 +78,9 @@ export default function AuthHeroPage() {
     };
 
     useEffect(() => {
+        if (user) {
+            navigate("/"); // redirect to home or dashboard if already logged in
+        }
         window.scrollTo(0, 0);
     }, []);
 
@@ -108,15 +110,15 @@ export default function AuthHeroPage() {
 
                     <div className="flex flex-wrap gap-8 mt-2 lg:mt-8 justify-center lg:justify-start">
                         <div className="text-center">
-                            <div className="text-2xl sm:text-4xl font-black bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">15K+</div>
+                            <div className="text-2xl sm:text-4xl font-black bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">5K+</div>
                             <div className="text-gray-400 text-sm mt-1">Active products</div>
                         </div>
                         <div className="text-center">
-                            <div className="text-2xl sm:text-4xl font-black bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">80K+</div>
-                            <div className="text-gray-400 text-sm mt-1">Products</div>
+                            <div className="text-2xl sm:text-4xl font-black bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">1.5K+</div>
+                            <div className="text-gray-400 text-sm mt-1">Customers</div>
                         </div>
                         <div className="text-center">
-                            <div className="text-2xl sm:text-4xl font-black bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">2M+</div>
+                            <div className="text-2xl sm:text-4xl font-black bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">2K+</div>
                             <div className="text-gray-400 text-sm mt-1">Orders</div>
                         </div>
                     </div>
@@ -248,7 +250,7 @@ export default function AuthHeroPage() {
 
                             <button
                                 type="submit"
-                                className="w-full relative px-6 py-3 rounded-xl font-bold text-lg overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-orange-500 hover:scale-105 transition-transform"
+                                className="w-full relative px-6 py-3 rounded-xl font-bold text-lg overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-orange-500 hover:scale-105 transition-transform cursor-pointer"
                             >
                                 {isLogin ? 'Sign In' : 'Create Account'}
                             </button>
