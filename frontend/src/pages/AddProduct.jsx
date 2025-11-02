@@ -495,7 +495,7 @@ const AddProduct = () => {
                                             <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
                                             Pricing & Taxation
                                         </h2>
-                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-300 mb-3">
                                                     Unit Price *
@@ -535,7 +535,7 @@ const AddProduct = () => {
                                             </div>
                                         </div>
 
-                                        <div className="mt-8">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-300 mb-3">
                                                     Tax Rate *
