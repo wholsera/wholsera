@@ -10,6 +10,9 @@ import ErrorPage from "./pages/ErrorPage";
 import LoadingScreen from "./components/LoadingScreen";
 import UserLayout from "./components/UserLayout";
 
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
+axios.defaults.withCredentials = true;
+
 // ✅ Lazy load all page components
 const Home = lazy(() => import("./pages/Home"));
 const LoginRegister = lazy(() => import("./pages/LoginRegister"));
@@ -26,9 +29,6 @@ const ShopByCategory = lazy(() => import("./pages/ShopByCategory"));
 const OrderSuccess = lazy(() => import("./pages/OrderSuccess"));
 const CustomerProfile = lazy(() => import("./pages/CustomerProfile"));
 const ManageOrders = lazy(() => import("./pages/ManageOrders"));
-
-axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
-axios.defaults.withCredentials = true;
 
 function App() {
   return (

@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import LoadingScreen from "../components/LoadingScreen";
 import axios from "axios";
 import {
-    ArrowLeft,
     ShoppingCart,
     Package,
     TrendingUp,
@@ -37,12 +37,16 @@ export default function ProductView() {
         window.scrollTo(0, 0);
     }, [id])
 
+    // if (!product) {
+    //     return (
+    //         <div className="min-h-screen flex items-center justify-center bg-black text-red-500">
+    //             product Loading.....
+    //         </div>
+    //     );
+    // }
+
     if (!product) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-black text-red-500">
-                Product not found.
-            </div>
-        );
+        return <LoadingScreen />;
     }
 
     const allImages = [product.mainImage, ...(product.additionalImages || [])].filter(Boolean);

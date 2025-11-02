@@ -2,18 +2,26 @@ import { useContext, useState, useEffect } from 'react';
 import { User, Mail, Phone, MapPin, Package, ShoppingBag, Clock, Edit2, Save, X, ChevronRight, TrendingUp } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function CustomerProfile() {
     const [isEditing, setIsEditing] = useState(false);
     const [activeTab, setActiveTab] = useState('info');
     const { user } = useContext(AuthContext);
+    const [orders, setOrders] = useState([]);
+
     const navigate = useNavigate();
+
+    const userData = async () => {
+        const res = await axios.get("/users/getUserData");
+        setOrders(res.data.orders);
+    }
 
     useEffect(() => {
         if (!user) {
-            // Redirect to login if user is not authenticated
             navigate("/login");
         }
+        userData();
     }, [user, navigate]);
 
     if (!user) {
@@ -22,44 +30,16 @@ export default function CustomerProfile() {
     }
 
     const [customerData, setCustomerData] = useState({
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        phone: '+91 98765 43210',
-        address: '123 Business Street, Mumbai, Maharashtra 400001'
+        name: user.fullName,
+        email: user.email,
+        phone: user.contactNo
     });
 
     const [editData, setEditData] = useState({ ...customerData });
 
-    const [orders] = useState([
-        {
-            id: 'ORD001',
-            orderNumber: 'WHS2025001',
-            items: ['Product A', 'Product B', 'Product C'],
-            totalAmount: 45999,
-            status: 'delivered',
-            createdAt: '2025-10-15T10:30:00Z'
-        },
-        {
-            id: 'ORD002',
-            orderNumber: 'WHS2025002',
-            items: ['Product D', 'Product E'],
-            totalAmount: 28500,
-            status: 'processing',
-            createdAt: '2025-10-20T14:20:00Z'
-        },
-        {
-            id: 'ORD003',
-            orderNumber: 'WHS2025003',
-            items: ['Product F'],
-            totalAmount: 15750,
-            status: 'pending',
-            createdAt: '2025-10-24T09:15:00Z'
-        }
-    ]);
-
     const stats = {
         totalOrders: orders.length,
-        totalSpent: orders.reduce((sum, order) => sum + order.totalAmount, 0),
+        totalSpent: orders.reduce((sum, order) => sum + order.grandTotal, 0),
         pendingOrders: orders.filter(order => order.status === 'pending').length
     };
 
@@ -210,7 +190,7 @@ export default function CustomerProfile() {
                                     )}
                                 </div>
 
-                                <div>
+                                {/* <div>
                                     <label className="flex items-center gap-2 text-gray-400 mb-2">
                                         <MapPin size={18} /> Address
                                     </label>
@@ -224,7 +204,7 @@ export default function CustomerProfile() {
                                     ) : (
                                         <div className="text-xl font-semibold">{customerData.address}</div>
                                     )}
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>
@@ -245,9 +225,9 @@ export default function CustomerProfile() {
                                             <div>
                                                 <div className="font-bold text-lg">Order #{order.orderNumber}</div>
                                                 <div className="text-gray-400 text-sm mt-1">
-                                                    {order.items.length} items • Placed on {new Date(order.createdAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}
+                                                    {order.orderItems.length} items • Placed on {new Date(order.createdAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}
                                                 </div>
-                                                <div className="text-2xl font-black mt-2">₹{order.totalAmount.toLocaleString()}</div>
+                                                <div className="text-2xl font-black mt-2">₹{order.grandTotal.toLocaleString()}</div>
                                             </div>
                                         </div>
                                         <div className="flex flex-col items-start md:items-end gap-3">

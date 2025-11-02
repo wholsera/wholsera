@@ -53,9 +53,8 @@ module.exports.registerUser = async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: true,      // set true in production (HTTPS required)
-            sameSite: "none",
-            path: "/",
+            secure: false,      // set true in production (HTTPS required)
+            sameSite: "lax",
             maxAge: 24 * 60 * 60 * 1000, // 24 hour
         });
 
@@ -99,9 +98,8 @@ module.exports.loginUser = async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: true,      // set true in production (HTTPS required)
-            sameSite: "none",
-            path: "/",
+            secure: false,      // set true in production (HTTPS required)
+            sameSite: "lax",
             maxAge: 24 * 60 * 60 * 1000, // 24 hour
         });
 
@@ -204,5 +202,22 @@ module.exports.getOrderDetail = async (req, res) => {
         return res.status(200).json({ status: true, order: order[0] });
     } catch (err) {
         return res.status(500).json({ status: false, message: "Internal Server Error" });
+    }
+};
+
+module.exports.getUserData = async (req, res) => {
+    try {
+        const userId = req.user._id;
+
+        const orders = await orderModel.find({ userId }).select("orderNumber grandTotal orderItems createdAt status");
+
+        return res.status(200).json({
+            status: true,
+            orders
+        });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ status: false, message: "Internal server error" });
     }
 };

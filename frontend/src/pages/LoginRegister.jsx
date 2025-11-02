@@ -28,10 +28,15 @@ export default function AuthHeroPage() {
         });
     };
 
+    const isValidPhone = (phone) =>
+        /^[6-9]\d{9}$/.test(phone) && !/^(\d)\1{9}$/.test(phone);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         try {
             if (isLogin) {
+                // LOGIN
                 const response = await axios.post(`/users/login`, { email: formData.email, password: formData.password });
                 const data = response.data;
                 if (response.status === 200) {
@@ -40,7 +45,33 @@ export default function AuthHeroPage() {
                     setTimeout(() => navigate("/"), 1000);
                 }
             } else {
-                const response = await axios.post(`/users/register`, formData);
+                // REGISTER - client-side validations
+                if (!formData.password || !formData.confirmPassword) {
+                    toast.error("Please enter password and confirm password.");
+                    return;
+                }
+                if (formData.password !== formData.confirmPassword) {
+                    toast.error("Passwords do not match. Please check and try again.");
+                    return;
+                }
+                if (!isValidPhone(formData.contactNo)) {
+                    toast.error("Invalid phone number. Must be 10 digits and start with 6–9.");
+                    return;
+                }
+                if (formData.password.length < 6) {
+                    toast.error("Password must be at least 6 characters long.");
+                    return;
+                }
+                // prepare payload - do not send confirmPassword to the backend
+                const payload = {
+                    email: formData.email,
+                    password: formData.password,
+                    fullName: formData.fullName,
+                    company: formData.company,
+                    contactNo: formData.contactNo
+                };
+
+                const response = await axios.post(`/users/register`, payload);
                 const data = response.data;
                 if (response.status === 200) {
                     toast.success("Account Created Successfully 🎊");
@@ -82,7 +113,7 @@ export default function AuthHeroPage() {
             navigate("/"); // redirect to home or dashboard if already logged in
         }
         window.scrollTo(0, 0);
-    }, []);
+    }, [user, navigate]);
 
     return (
         <div className="min-h-screen bg-black text-white relative overflow-hidden flex items-center justify-center px-4">
@@ -177,6 +208,7 @@ export default function AuthHeroPage() {
                                             name="contactNo"
                                             placeholder="Phone Number"
                                             value={formData.contactNo}
+                                            maxLength={10}
                                             onChange={handleInputChange}
                                             className="w-full pl-10 pr-4 py-3 bg-black/40 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all"
                                             required
