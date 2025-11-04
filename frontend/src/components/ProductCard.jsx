@@ -20,11 +20,13 @@ export default function ProductCard({ freshProducts }) {
             {freshProducts.map((product, index) => (
                 <div
                     key={index}
-                    onClick={() => handleViewProduct(product)}
                     className="group relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border border-gray-700/50 rounded-2xl md:rounded-3xl overflow-hidden hover:border-purple-500/50 hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-500"
                 >
                     {/* Image Container */}
-                    <div className="relative w-full aspect-square overflow-hidden">
+                    <div
+                        onClick={() => handleViewProduct(product)}
+                        className="relative w-full aspect-square overflow-hidden"
+                    >
                         <img
                             src={product.mainImage}
                             alt={product.productName}
