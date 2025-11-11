@@ -13,7 +13,12 @@ export default function CustomerProfile() {
     const navigate = useNavigate();
 
     const userData = async () => {
-        const res = await axios.get("/users/getUserData");
+        const res = await axios.get("/users/getUserData", {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+            }
+        });
         setOrders(res.data.orders);
     }
 

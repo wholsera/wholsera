@@ -34,7 +34,14 @@ export default function CheckoutPage() {
 
     const fetchCartData = async () => {
         try {
-            const response = await axios.get("/users/cartData");
+            const response = await axios.get("/users/cartData",
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                    }
+                }
+            );
             if (response.data.cart.items) {
                 setCart(response.data.cart.items);
             } else {
@@ -102,7 +109,14 @@ export default function CheckoutPage() {
 
         try {
             toast.promise(
-                axios.post("/users/createOrder", { address, cart, total }),
+                axios.post("/users/createOrder", { address, cart, total },
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                        }
+                    }
+                ),
                 {
                     loading: "Processing payment...",
                     success: "Order placed successfully ✅",

@@ -11,7 +11,12 @@ export default function WholseraHomepage() {
 
     const fetchFreshProducts = async () => {
         try {
-            const response = await axios.get("/product/newArrivals");
+            const response = await axios.get("/product/newArrivals", {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                }
+            });
             setFreshProducts(response.data.products || []);
         } catch (error) {
             console.error("Error fetching fresh products:", error);
@@ -20,7 +25,12 @@ export default function WholseraHomepage() {
 
     const fetchCategories = async () => {
         try {
-            const response = await axios.get("/admin/categories");
+            const response = await axios.get("/admin/categories", {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                }
+            });
             setCategories(response.data.categories);
         } catch (error) {
             console.error("Error fetching products:", error);

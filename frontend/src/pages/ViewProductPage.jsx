@@ -24,7 +24,12 @@ export default function ProductView() {
     useEffect(() => {
         const fetchProductDetail = async () => {
             try {
-                const res = await axios.get(`/product/view/${id}`);
+                const res = await axios.get(`/product/view/${id}`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                    }
+                });
                 const data = res.data.productData;
                 setProduct(data);
                 setQuantity(data.minimumOrderQuantity);

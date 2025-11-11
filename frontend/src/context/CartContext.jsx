@@ -24,7 +24,12 @@ export const CartProvider = ({ children }) => {
             }
 
             try {
-                const res = await axios.get("/users/cartData");
+                const res = await axios.get("/users/cartData", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                    }
+                });
                 if (res.data && res.data.cart) {
                     setCart(res.data.cart.items);
                 }
@@ -59,7 +64,15 @@ export const CartProvider = ({ children }) => {
 
         try {
             await toast.promise(
-                axios.post(`/product/addToCart`, { cart: cartData }),
+                axios.post(`/product/addToCart`,
+                    { cart: cartData },
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                        }
+                    }
+                ),
                 {
                     loading: "Adding to Cart...",
                     success: "Added to cart!",
@@ -82,7 +95,15 @@ export const CartProvider = ({ children }) => {
     const removeFromCart = async (productId) => {
         try {
             await toast.promise(
-                axios.post(`/product/removeFromCart`, { productId }),
+                axios.post(`/product/removeFromCart`,
+                    { productId },
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                        }
+                    }
+                ),
                 {
                     loading: "Removing from Cart...",
                     success: "Removed!",

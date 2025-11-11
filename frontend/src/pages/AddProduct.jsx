@@ -63,7 +63,14 @@ const AddProduct = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await axios.get("/admin/categories");
+                const response = await axios.get("/admin/categories",
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                        }
+                    }
+                );
                 setCategories(response.data.categories);
             } catch (error) {
                 console.error("Error fetching categories:", error);
@@ -248,7 +255,15 @@ const AddProduct = () => {
         setLoading(true);
 
         toast.promise(
-            axios.post("/product/new", formData),
+            axios.post("/product/new",
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                    }
+                }
+            ),
             {
                 loading: "Adding product...",
                 success: "Product Added 🎉",

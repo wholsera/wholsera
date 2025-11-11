@@ -49,7 +49,12 @@ const ManageCategories = () => {
 
     const fetchCategories = async () => {
         try {
-            const response = await axios.get("/admin/categories");
+            const response = await axios.get("/admin/categories", {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                }
+            });
             setCategories(response.data.categories);
         } catch (error) {
             toast.error("Failed to fetch products");
@@ -120,7 +125,10 @@ const ManageCategories = () => {
         try {
             toast.promise(
                 axios.post("/admin/addCategory", newCategory, {
-                    headers: { "Content-Type": "application/json" }
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                    }
                 }),
                 {
                     loading: "Adding category...",
@@ -173,7 +181,10 @@ const ManageCategories = () => {
         try {
             toast.promise(
                 axios.post("/admin/addSubcategory", newSubcategoryData, {
-                    headers: { "Content-Type": "application/json" }
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                    }
                 }),
                 {
                     loading: "Adding Subcategory...",
@@ -232,7 +243,12 @@ const ManageCategories = () => {
         }).then(async (e) => {
             if (e.isConfirmed) {
                 toast.promise(
-                    axios.delete(`/admin/category/${id}`),
+                    axios.delete(`/admin/category/${id}`, {
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                        }
+                    }),
                     {
                         loading: "Deleting category...",
                         success: "category deleted successfully ✅",
@@ -276,7 +292,10 @@ const ManageCategories = () => {
 
         toast.promise(
             axios.post(`/admin/deleteSubcategory`, data, {
-                headers: { "Content-type": "application/json" }
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                }
             }),
             {
                 loading: "Deleting Subcategory...",

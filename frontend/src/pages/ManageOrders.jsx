@@ -66,7 +66,12 @@ const ManageOrders = () => {
     const fetchOrders = async () => {
         try {
             setLoading(true);
-            const response = await axios.get("/admin/orders");
+            const response = await axios.get("/admin/orders", {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                }
+            });
             if (response.status === 200) {
                 setOrders(response.data.orders);
                 setLoading(false);
@@ -87,6 +92,11 @@ const ManageOrders = () => {
             setUpdatingStatus(true);
             const response = await axios.post(`/admin/orders/updateStatus/${orderId}`, {
                 status: newStatus
+            }, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                }
             });
 
             if (response.status === 200) {
@@ -193,7 +203,12 @@ const ManageOrders = () => {
     const viewOrderItems = async () => {
         try {
             setItemsLoading(true);
-            const response = await axios.get(`/admin/orders/orderItems/${selectedOrder.orderId}`);
+            const response = await axios.get(`/admin/orders/orderItems/${selectedOrder.orderId}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                }
+            });
             if (response.status === 200) {
                 setOrderItems(response.data.items);
                 setShowItemsModal(true);

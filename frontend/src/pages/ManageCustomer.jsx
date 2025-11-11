@@ -40,7 +40,7 @@ const ManageCustomers = () => {
         { name: 'Orders', icon: ShoppingCart, path: "/manage-orders" },
         { name: 'Go to Website', icon: Earth, path: "/" }
     ];
-    
+
     // Fetch customers on component mount
     useEffect(() => {
         fetchCustomers();
@@ -49,7 +49,12 @@ const ManageCustomers = () => {
     const fetchCustomers = async () => {
         try {
             setLoading(true);
-            const response = await axios.get("/admin/customers");
+            const response = await axios.get("/admin/customers", {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                }
+            });
             if (response.status === 200) {
                 setCustomers(response.data.customers);
                 setLoading(false);
@@ -66,7 +71,7 @@ const ManageCustomers = () => {
     };
 
     const handleDelete = async (customerId) => {
-        
+
     };
 
     const handleEdit = (customer) => {

@@ -16,7 +16,12 @@ export default function ShopByCategory() {
     const fetchCategoryProducts = async () => {
         try {
             setIsLoading(true);
-            const response = await axios.get(`/product/category/${id}`);
+            const response = await axios.get(`/product/category/${id}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                }
+            });
             setProducts(response.data.products || []);
             setCategory(response.data.category || null);
         } catch (error) {

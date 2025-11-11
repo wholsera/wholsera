@@ -13,7 +13,12 @@ export default function ExploreProducts() {
     // Fetch products
     const fetchProducts = async () => {
         try {
-            const response = await axios.get("/product");
+            const response = await axios.get("/product", {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                }
+            });
             setProducts(response.data.products);
         } catch (error) {
             console.error("Failed to fetch products:", error);
@@ -23,7 +28,12 @@ export default function ExploreProducts() {
     // Fetch categories
     const fetchCategories = async () => {
         try {
-            const response = await axios.get("/admin/categories");
+            const response = await axios.get("/admin/categories", {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                }
+            });
             setCategories(response.data.categories);
         } catch (error) {
             console.error("Failed to fetch categories:", error);
@@ -56,11 +66,10 @@ export default function ExploreProducts() {
                 Categories
             </h3>
             <button
-                className={`w-full text-left px-4 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                    selectedCategory === "All"
-                        ? "bg-gradient-to-r from-orange-500 via-pink-500 to-purple-500 text-white shadow-lg shadow-purple-500/30"
-                        : "bg-gradient-to-br from-gray-800 to-gray-700 text-gray-300 hover:from-gray-700 hover:to-gray-600 border border-gray-700/50"
-                }`}
+                className={`w-full text-left px-4 py-3 rounded-xl font-semibold transition-all duration-300 ${selectedCategory === "All"
+                    ? "bg-gradient-to-r from-orange-500 via-pink-500 to-purple-500 text-white shadow-lg shadow-purple-500/30"
+                    : "bg-gradient-to-br from-gray-800 to-gray-700 text-gray-300 hover:from-gray-700 hover:to-gray-600 border border-gray-700/50"
+                    }`}
                 onClick={() => handleCategorySelect("All")}
             >
                 All Products
@@ -68,11 +77,10 @@ export default function ExploreProducts() {
             {categories.map((cat, i) => (
                 <button
                     key={i}
-                    className={`w-full text-left px-4 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                        selectedCategory === cat.name
-                            ? "bg-gradient-to-r from-orange-500 via-pink-500 to-purple-500 text-white shadow-lg shadow-purple-500/30"
-                            : "bg-gradient-to-br from-gray-800 to-gray-700 text-gray-300 hover:from-gray-700 hover:to-gray-600 border border-gray-700/50"
-                    }`}
+                    className={`w-full text-left px-4 py-3 rounded-xl font-semibold transition-all duration-300 ${selectedCategory === cat.name
+                        ? "bg-gradient-to-r from-orange-500 via-pink-500 to-purple-500 text-white shadow-lg shadow-purple-500/30"
+                        : "bg-gradient-to-br from-gray-800 to-gray-700 text-gray-300 hover:from-gray-700 hover:to-gray-600 border border-gray-700/50"
+                        }`}
                     onClick={() => handleCategorySelect(cat.name)}
                 >
                     {cat.name}
@@ -93,9 +101,8 @@ export default function ExploreProducts() {
 
             {/* Mobile Filter Sidebar */}
             <div
-                className={`lg:hidden fixed top-0 right-0 h-full w-80 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border-l border-purple-500/20 z-50 transform transition-transform duration-300 ease-in-out ${
-                    isFilterOpen ? "translate-x-0" : "translate-x-full"
-                } overflow-y-auto`}
+                className={`lg:hidden fixed top-0 right-0 h-full w-80 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border-l border-purple-500/20 z-50 transform transition-transform duration-300 ease-in-out ${isFilterOpen ? "translate-x-0" : "translate-x-full"
+                    } overflow-y-auto`}
             >
                 <div className="p-6">
                     <div className="flex justify-between items-center mb-6">

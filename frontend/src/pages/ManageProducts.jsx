@@ -52,7 +52,12 @@ const ManageProducts = () => {
     const fetchProducts = async () => {
         try {
             setLoading(true);
-            const response = await axios.get("/product");
+            const response = await axios.get("/product", {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                }
+            });
             setProducts(response.data.products);
         } catch (error) {
             toast.error("Failed to fetch products");
@@ -64,7 +69,12 @@ const ManageProducts = () => {
 
     const fetchCategories = async () => {
         try {
-            const response = await axios.get("/admin/categories");
+            const response = await axios.get("/admin/categories", {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                }
+            });
             setCategories(response.data.categories);
         } catch (error) {
             console.error("Error fetching categories:", error);
@@ -88,7 +98,12 @@ const ManageProducts = () => {
             if (e.isConfirmed) {
                 try {
                     await toast.promise(
-                        axios.delete(`/product/delete/${productId}`),
+                        axios.delete(`/product/delete/${productId}`, {
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                            }
+                        }),
                         {
                             loading: "Deleting product...",
                             success: "Product deleted successfully ✅",
@@ -110,7 +125,12 @@ const ManageProducts = () => {
     const handleStatusChange = async (productId, newStatus) => {
         try {
             toast.promise(
-                axios.patch(`/product/updateStatus/${productId}`, { status: newStatus }),
+                axios.patch(`/product/updateStatus/${productId}`, { status: newStatus }, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                    }
+                }),
                 {
                     loading: "Updating product...",
                     success: "Status updated ✅",
@@ -174,7 +194,12 @@ const ManageProducts = () => {
 
         try {
             toast.promise(
-                axios.put(`/product/update/${editingProduct._id}`, editingProduct),
+                axios.put(`/product/update/${editingProduct._id}`, editingProduct, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                    }
+                }),
                 {
                     loading: "Updating product...",
                     success: "Product updated successfully ✅",

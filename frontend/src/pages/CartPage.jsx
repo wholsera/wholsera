@@ -17,7 +17,14 @@ export default function CartPage() {
 
     const fetchCartData = async () => {
         try {
-            const response = await axios.get("/users/cartData");
+            const response = await axios.get("/users/cartData",
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                    }
+                }
+            );
             if (response.data.cart.items) {
                 setCart(response.data.cart.items);
             } else {
@@ -39,7 +46,13 @@ export default function CartPage() {
                 axios.post("/product/updateCartQuantity", {
                     cartItemId,
                     quantity,
-                }),
+                },
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                        }
+                    }),
                 {
                     loading: "Updating quantity...",
                     success: "Quantity updated ✅",
