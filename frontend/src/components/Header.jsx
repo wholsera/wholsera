@@ -10,6 +10,7 @@ import {
     UserCircle,
     Settings,
     LogOut,
+    House,
 } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
@@ -72,9 +73,8 @@ export default function Header() {
         try {
             const response = await logout();
             if (response.status === 200) {
-                toast.success("Logout Successful");
                 setCart([]);
-                navigate("/");
+                navigate("/login");
             }
         } catch (err) {
             navigate("/");
@@ -237,6 +237,15 @@ export default function Header() {
 
                         {/* Menu Items */}
                         <div className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+                            <Link
+                                to="/"
+                                className="flex items-center space-x-3 px-4 py-3 text-gray-200 hover:bg-white/10 rounded-lg transition font-medium"
+                                onClick={() => setMenuOpen(false)}
+                            >
+                                <House size={22} className="text-yellow-400" />
+                                <span>Home</span>
+                            </Link>
+
                             <Link
                                 to="/profile"
                                 className="flex items-center space-x-3 px-4 py-3 text-gray-200 hover:bg-white/10 rounded-lg transition font-medium"

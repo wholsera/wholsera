@@ -33,9 +33,9 @@ export const AuthProvider = ({ children }) => {
     };
 
     const logout = async () => {
-        const response = await axios.get("/users/logout", { withCredentials: true });
         localStorage.removeItem("wholseraToken");
         setUser(null);
+        const response = await axios.get("/users/logout", { withCredentials: true });
         return response;
     };
 

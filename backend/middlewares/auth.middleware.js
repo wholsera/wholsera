@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 module.exports.authUser = async (req, res, next) => {
     try {
         const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
-        if (!token) {
+        if (!token || token === "null" || token === "undefined") {
             return res.status(401).json({ status: false, message: "Unauthorized - No token provided" });
         }
 
