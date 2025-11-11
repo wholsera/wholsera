@@ -72,6 +72,7 @@ export default function Header() {
         try {
             const response = await logout();
             if (response.status === 200) {
+                toast.success("Logout Successful");
                 setCart([]);
                 navigate("/");
             }
