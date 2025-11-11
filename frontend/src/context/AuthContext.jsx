@@ -11,7 +11,12 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const res = await axios.get("/users/profile", { withCredentials: true });
+                const res = await axios.get("/users/profile", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                    }
+                });
                 setUser(res.data);
             } catch (err) {
                 setUser(null);
@@ -23,11 +28,13 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = (userData) => {
+        localStorage.setItem("wholseraToken", userData.token);
         setUser(userData);
     };
 
     const logout = async () => {
         const response = await axios.get("/users/logout", { withCredentials: true });
+        localStorage.removeItem("wholseraToken");
         setUser(null);
         return response;
     };
