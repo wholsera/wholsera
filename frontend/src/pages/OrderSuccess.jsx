@@ -22,7 +22,6 @@ export default function OrderSuccess() {
         try {
             const res = await axios.get("/users/orderDetail", {
                 params: { orderNumber },
-            }, {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
