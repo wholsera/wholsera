@@ -9,6 +9,7 @@ export default function AuthHeroPage() {
     const [isLogin, setIsLogin] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -33,6 +34,7 @@ export default function AuthHeroPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         try {
             if (isLogin) {
@@ -91,6 +93,8 @@ export default function AuthHeroPage() {
             } else {
                 toast.error("Server not reachable 🚨");
             }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -282,12 +286,40 @@ export default function AuthHeroPage() {
 
                             <button
                                 type="submit"
-                                className="w-full relative px-6 py-3 rounded-xl font-bold text-lg overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-orange-500 hover:scale-105 transition-transform cursor-pointer"
+                                disabled={loading}
+                                className={`w-full relative px-6 py-3 rounded-xl font-bold text-lg overflow-hidden bg-gradient-to-r 
+        from-blue-600 via-purple-600 to-orange-500 transition-transform 
+        ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:scale-105 cursor-pointer'}`}
                             >
-                                {isLogin ? 'Sign In' : 'Create Account'}
+                                {loading ? (
+                                    <div className="flex items-center justify-center gap-2">
+                                        <svg
+                                            className="animate-spin h-5 w-5 text-white"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <circle
+                                                className="opacity-25"
+                                                cx="12"
+                                                cy="12"
+                                                r="10"
+                                                stroke="white"
+                                                strokeWidth="4"
+                                            ></circle>
+                                            <path
+                                                className="opacity-75"
+                                                fill="white"
+                                                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                                            ></path>
+                                        </svg>
+                                        {isLogin ? 'Signing In...' : 'Creating...'}
+                                    </div>
+                                ) : (
+                                    isLogin ? 'Sign In' : 'Create Account'
+                                )}
                             </button>
 
-                            <div className="mt-6 text-center">
+                            <div className="mt-4 text-center">
                                 <p className="text-gray-300">
                                     {isLogin ? "Don't have an account?" : "Already have an account?"}
                                     <button

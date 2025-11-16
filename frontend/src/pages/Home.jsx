@@ -170,7 +170,7 @@ export default function WholseraHomepage() {
                         <p className="text-gray-400">Find exactly what you need from our diverse collection</p>
                     </div>
                     <div className="overflow-x-auto no-scrollbar pb-4">
-                        <div className="flex gap-6 justify-center sm:w-full">
+                        <div className="flex gap-6 justify-start sm:justify-center sm:w-full">
                             {categories.map((cat, i) => (
                                 <Link key={i} to={`/shop-by-category/${cat._id}`}>
                                     <div className="flex flex-col items-center flex-shrink-0 group cursor-pointer">

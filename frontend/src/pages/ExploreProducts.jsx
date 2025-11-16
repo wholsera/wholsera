@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Filter, X } from "lucide-react";
 import ProductCard from '../components/ProductCard';
+import LoadingScreen from "../components/LoadingScreen";
 
 export default function ExploreProducts() {
     const [products, setProducts] = useState([]);
@@ -9,10 +10,13 @@ export default function ExploreProducts() {
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [cart, setCart] = useState([]);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+
 
     // Fetch products
     const fetchProducts = async () => {
         try {
+            setLoading(true);
             const response = await axios.get("/product", {
                 headers: {
                     "Content-Type": "application/json",
@@ -22,6 +26,25 @@ export default function ExploreProducts() {
             setProducts(response.data.products);
         } catch (error) {
             console.error("Failed to fetch products:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const fetchProductsByCategory = async (categoryId) => {
+        try {
+            setLoading(true);
+            const response = await axios.get(`/product/category/${categoryId}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                }
+            });
+            setProducts(response.data.products);
+        } catch (error) {
+            console.error("Failed to fetch products:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -46,17 +69,9 @@ export default function ExploreProducts() {
         window.scrollTo(0, 0);
     }, []);
 
-    const filteredProducts =
-        selectedCategory === "All"
-            ? products
-            : products.filter((p) => p.category === selectedCategory);
-
-    const addToCart = (product) => {
-        setCart((prev) => [...prev, product]);
-    };
-
     const handleCategorySelect = (category) => {
         setSelectedCategory(category);
+        fetchProductsByCategory(category);
         setIsFilterOpen(false);
     };
 
@@ -66,22 +81,22 @@ export default function ExploreProducts() {
                 Categories
             </h3>
             <button
-                className={`w-full text-left px-4 py-3 rounded-xl font-semibold transition-all duration-300 ${selectedCategory === "All"
+                className={`w-full text-left px-4 py-3 rounded-xl font-semibold transition-all duration-300 cursor-pointer ${selectedCategory === "All"
                     ? "bg-gradient-to-r from-orange-500 via-pink-500 to-purple-500 text-white shadow-lg shadow-purple-500/30"
                     : "bg-gradient-to-br from-gray-800 to-gray-700 text-gray-300 hover:from-gray-700 hover:to-gray-600 border border-gray-700/50"
                     }`}
-                onClick={() => handleCategorySelect("All")}
+                onClick={() => fetchProducts()}
             >
                 All Products
             </button>
             {categories.map((cat, i) => (
                 <button
                     key={i}
-                    className={`w-full text-left px-4 py-3 rounded-xl font-semibold transition-all duration-300 ${selectedCategory === cat.name
+                    className={`w-full text-left px-4 py-3 rounded-xl font-semibold transition-all duration-300 cursor-pointer ${selectedCategory === cat.name
                         ? "bg-gradient-to-r from-orange-500 via-pink-500 to-purple-500 text-white shadow-lg shadow-purple-500/30"
                         : "bg-gradient-to-br from-gray-800 to-gray-700 text-gray-300 hover:from-gray-700 hover:to-gray-600 border border-gray-700/50"
                         }`}
-                    onClick={() => handleCategorySelect(cat.name)}
+                    onClick={() => handleCategorySelect(cat._id)}
                 >
                     {cat.name}
                 </button>
@@ -133,7 +148,6 @@ export default function ExploreProducts() {
                         <h1 className="text-xl lg:text-3xl font-black bg-gradient-to-r from-orange-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
                             Explore Products
                         </h1>
-                        {/* Filter button (visible only on mobile) */}
                         <div className="lg:hidden">
                             <button
                                 onClick={() => setIsFilterOpen(!isFilterOpen)}
@@ -144,8 +158,12 @@ export default function ExploreProducts() {
                         </div>
                     </div>
 
-                    {/* Products Grid using ProductCard */}
-                    <ProductCard freshProducts={filteredProducts} />
+                    {/* Loading or Products */}
+                    {loading ? (
+                        <LoadingScreen />
+                    ) : (
+                        <ProductCard freshProducts={products} />
+                    )}
                 </div>
             </div>
 

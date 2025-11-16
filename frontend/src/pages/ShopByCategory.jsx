@@ -31,22 +31,43 @@ export default function ShopByCategory() {
         }
     };
 
+    // Fetch category details + products by sub category
+    const fetchProductsBySubcategory = async (sub) => {
+        try {
+            setIsLoading(true);
+            const response = await axios.get(`/product/subcategory/${id}/${sub}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                }
+            });
+            setProducts(response.data.products || []);
+            setCategory(response.data.category || null);
+        } catch (error) {
+            if (error.response.data.status === false) {
+                setProducts([]);
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     useEffect(() => {
         fetchCategoryProducts();
         window.scrollTo(0, 0);
     }, [id]);
 
-    const filteredProducts =
-        selectedSubcategory === "All"
-            ? products
-            : products.filter(
-                (p) => p.subcategory === selectedSubcategory
-            );
-
     // Handle filter click
     const handleSubcategorySelect = (sub) => {
-        setSelectedSubcategory(sub);
-        setIsFilterOpen(false);
+        if (sub === "All") {
+            fetchCategoryProducts();
+            setSelectedSubcategory(sub);
+            setIsFilterOpen(false);
+        } else {
+            setSelectedSubcategory(sub);
+            fetchProductsBySubcategory(sub);
+            setIsFilterOpen(false);
+        }
     };
 
     return (
@@ -61,7 +82,7 @@ export default function ShopByCategory() {
                 {category?.subcategories?.length > 0 && (
                     <button
                         onClick={() => setIsFilterOpen(true)}
-                        className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-xl transition-all duration-200"
+                        className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-xl transition-all duration-200 cursor-pointer"
                     >
                         <Filter size={18} />
                         <span>Filter</span>
@@ -74,8 +95,8 @@ export default function ShopByCategory() {
                 <div className="flex justify-center items-center h-64">
                     <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-purple-500"></div>
                 </div>
-            ) : filteredProducts.length > 0 ? (
-                <ProductCard freshProducts={filteredProducts} />
+            ) : products.length > 0 ? (
+                <ProductCard freshProducts={products} />
             ) : (
                 <div className="text-center text-gray-400 mt-20">
                     <X size={40} className="mx-auto mb-4 opacity-70" />
@@ -111,7 +132,7 @@ export default function ShopByCategory() {
                 <div className="p-5 space-y-3">
                     <button
                         onClick={() => handleSubcategorySelect("All")}
-                        className={`w-full text-left px-4 py-2 rounded-lg transition ${selectedSubcategory === "All"
+                        className={`w-full text-left px-4 py-2 rounded-lg transition cursor-pointer ${selectedSubcategory === "All"
                             ? "bg-purple-600 text-white"
                             : "bg-gray-700 hover:bg-gray-600 text-gray-300"
                             }`}
@@ -123,7 +144,7 @@ export default function ShopByCategory() {
                         <button
                             key={index}
                             onClick={() => handleSubcategorySelect(sub)}
-                            className={`w-full text-left px-4 py-2 rounded-lg transition ${selectedSubcategory === sub
+                            className={`w-full text-left px-4 py-2 rounded-lg transition cursor-pointer ${selectedSubcategory === sub
                                 ? "bg-purple-600 text-white"
                                 : "bg-gray-700 hover:bg-gray-600 text-gray-300"
                                 }`}

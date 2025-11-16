@@ -115,11 +115,21 @@ export default function Header() {
 
                         {/* Desktop Actions */}
                         <div className="hidden md:flex items-center space-x-6">
-                            <Link to="/cart" className="relative">
-                                <ShoppingCart
-                                    className="text-yellow-400 hover:text-yellow-300 transition"
-                                    size={24}
-                                />
+                            <Link to="/cart" className="relative group">
+                                <div className="relative">
+                                    <div className="w-12 h-12 rounded-full flex items-center justify-center hover:bg-black hover:text-white transition-all cursor-pointer group">
+                                        <ShoppingCart
+                                            className="text-yellow-400 hover:text-yellow-300 transition"
+                                            size={24}
+                                        />
+                                    </div>
+                                    {cart.length > 0 && (
+                                        <div className="absolute -top-1 -right-1 w-5 h-5 bg-black text-white text-xs font-bold rounded-full flex items-center justify-center">
+                                            {cart.length}
+                                        </div>
+                                    )}
+                                </div>
+
                             </Link>
 
                             {/* User Icon with Dropdown Menu */}
@@ -186,11 +196,18 @@ export default function Header() {
 
                         {/* Mobile Icons */}
                         <div className="flex items-center space-x-4 md:hidden">
-                            <Link to="/cart">
-                                <ShoppingCart
-                                    className="text-yellow-400 cursor-pointer"
-                                    size={22}
-                                />
+                            <Link to="/cart" className="relative">
+                                <div className="w-10 h-10 rounded-full flex items-center justify-center">
+                                    <ShoppingCart
+                                        className="text-yellow-400 cursor-pointer"
+                                        size={22}
+                                    />
+                                    {cart.length > 0 && (
+                                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-black text-white text-xs font-bold rounded-full flex items-center justify-center">
+                                            {cart.length}
+                                        </div>
+                                    )}
+                                </div>
                             </Link>
                             <Search
                                 className="text-yellow-400 cursor-pointer"
@@ -263,6 +280,11 @@ export default function Header() {
                                 <div className="flex items-center space-x-3">
                                     <ShoppingCart size={22} className="text-yellow-400" />
                                     <span>Shopping Cart</span>
+                                    {cart.length > 0 && (
+                                        <span className="text-xs">
+                                            ({cart.length} Items)
+                                        </span>
+                                    )}
                                 </div>
                             </Link>
 

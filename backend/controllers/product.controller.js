@@ -341,3 +341,32 @@ module.exports.getProductsByCategory = async (req, res) => {
         return res.status(500).json({ status: false, message: "Internal Server Error" });
     }
 };
+
+module.exports.getProductsBySubCategory = async (req, res) => {
+    try {
+        const categoryId = req.params.categoryId;
+        const subcategory = req.params.subcategory;
+
+        if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+            return res.status(400).json({ status: false, message: "Invalid category ID" });
+        }
+
+        const category = await categoryModel.findById(categoryId).select("name subcategories");
+
+        const products = await productModel
+            .find({
+                category: categoryId,
+                subcategory: subcategory
+            })
+            .select("productName unitPrice minimumOrderQuantity mainImage taxType taxRate");
+
+        if (products.length === 0) {
+            return res.status(404).json({ status: false, message: "No products found in this category" });
+        }
+
+        return res.status(200).json({ status: true, products, category });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ status: false, message: "Internal Server Error" });
+    }
+};
