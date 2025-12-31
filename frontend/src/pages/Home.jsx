@@ -131,7 +131,7 @@ export default function WholseraHomepage() {
                         <div className="space-y-4">
                             <section className="">
                                 <img
-                                    src="/WholseraFullLogo.png"
+                                    src="/WholeseraFullLogo.png"
                                     alt="Logo"
                                     className="w-full h-full object-cover"
                                 />
