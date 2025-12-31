@@ -83,6 +83,14 @@ export default function Header() {
         setMenuOpen(false);
     };
 
+    const handleSearch = () => {
+        if (!searchQuery.trim()) return;
+
+        navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+        setIsMobileSearchOpen(false);
+        setMenuOpen(false);
+    };
+
     return (
         <>
             {/* ====== HEADER BAR ====== */}
@@ -108,9 +116,14 @@ export default function Header() {
                                 placeholder="Bottles, Pen Holder, Bags..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
+                                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                                 className="flex-1 bg-transparent outline-none text-white placeholder-white font-semibold text-sm"
                             />
-                            <Search className="text-yellow-400 cursor-pointer" size={20} />
+                            <Search
+                                className="text-yellow-400 cursor-pointer"
+                                size={20}
+                                onClick={handleSearch}
+                            />
                         </div>
 
                         {/* Desktop Actions */}
@@ -341,10 +354,15 @@ export default function Header() {
                                 placeholder="Search for products..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
+                                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                                 autoFocus
                                 className="flex-1 bg-transparent outline-none text-white placeholder-gray-300 font-medium text-sm"
                             />
-                            <Search className="text-yellow-400" size={20} />
+                            <Search
+                                className="text-yellow-400 cursor-pointer"
+                                size={20}
+                                onClick={handleSearch}
+                            />
                         </div>
                     </div>
                 </div>

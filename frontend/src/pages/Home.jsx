@@ -121,10 +121,13 @@ export default function WholseraHomepage() {
                                         Browse Products <ShoppingCart className="ml-2" size={20} />
                                     </span>
                                 </Link>
-                                <button className="px-8 py-4 rounded-full font-bold text-sm sm:text-lg border-2 border-purple-500 hover:bg-purple-500/20 transition flex items-center gap-2 cursor-pointer">
+                                <a
+                                    href="tel:7982133795"
+                                    className="px-8 py-4 rounded-full font-bold text-sm sm:text-lg border-2 border-purple-500 hover:bg-purple-500/20 transition flex items-center gap-2 cursor-pointer"
+                                >
                                     <Phone size={20} />
                                     Contact Us
-                                </button>
+                                </a>
                             </div>
                         </div>
                         {/* Left Content */}

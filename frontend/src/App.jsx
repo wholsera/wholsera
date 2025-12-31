@@ -29,6 +29,7 @@ const ShopByCategory = lazy(() => import("./pages/ShopByCategory"));
 const OrderSuccess = lazy(() => import("./pages/OrderSuccess"));
 const CustomerProfile = lazy(() => import("./pages/CustomerProfile"));
 const ManageOrders = lazy(() => import("./pages/ManageOrders"));
+const SearchPage = lazy(() => import("./pages/SearchPage"));
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
             <Route path="/order-success/:orderNumber" element={<OrderSuccess />} />
             <Route path="/profile" element={<CustomerProfile />} />
             <Route path="/product/:id" element={<ViewProductPage />} />
+            <Route path="/search" element={<SearchPage />} />
             <Route path="/shop-by-category/:id" element={<ShopByCategory />} />
           </Route>
 

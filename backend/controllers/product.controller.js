@@ -372,3 +372,18 @@ module.exports.getProductsBySubCategory = async (req, res) => {
         return res.status(500).json({ status: false, message: "Internal Server Error" });
     }
 };
+
+module.exports.searchProducts = async (req, res) => {
+    try {
+        const searchTerm = req.query.q;
+
+        const products = await productModel.find({
+            productName: { $regex: searchTerm, $options: "i" }
+        })
+
+        return res.status(200).json({ status: true, products });
+
+    } catch (err) {
+        return res.status(500).json({ status: false, message: "Internal Server Error" });
+    }
+}
