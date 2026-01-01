@@ -5,42 +5,62 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export default function CustomerProfile() {
-    const [isEditing, setIsEditing] = useState(false);
-    const [activeTab, setActiveTab] = useState('info');
     const { user } = useContext(AuthContext);
-    const [orders, setOrders] = useState([]);
-
     const navigate = useNavigate();
 
+    const [isEditing, setIsEditing] = useState(false);
+    const [activeTab, setActiveTab] = useState('info');
+    const [orders, setOrders] = useState([]);
+
+    const [customerData, setCustomerData] = useState({
+        name: '',
+        email: '',
+        phone: ''
+    });
+
+    const [editData, setEditData] = useState({
+        name: '',
+        email: '',
+        phone: ''
+    });
+
     const userData = async () => {
-        const res = await axios.get("/users/getUserData", {
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
-            }
-        });
-        setOrders(res.data.orders);
-    }
+        try {
+            const res = await axios.get('/users/getUserData', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('wholseraToken')}`
+                }
+            });
+            setOrders(res.data.orders || []);
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
     useEffect(() => {
         if (!user) {
-            navigate("/login");
+            navigate('/login');
+            return;
         }
+
+        setCustomerData({
+            name: user.fullName,
+            email: user.email,
+            phone: user.contactNo
+        });
+
+        setEditData({
+            name: user.fullName,
+            email: user.email,
+            phone: user.contactNo
+        });
+
         userData();
     }, [user, navigate]);
 
-    if (!user) {
-        // Optional: show nothing while redirecting
-        return null;
-    }
-
-    const [customerData, setCustomerData] = useState({
-        name: user.fullName,
-        email: user.email,
-        phone: user.contactNo
-    });
-
-    const [editData, setEditData] = useState({ ...customerData });
+    // ===== GUARD RENDER =====
+    if (!user) return null;
 
     const stats = {
         totalOrders: orders.length,

@@ -44,9 +44,7 @@ export default function AuthHeroPage() {
                 if (response.status === 200) {
                     toast.success("Login Successful 🎉");
                     login(data);
-                    setTimeout(() => {
-                        window.location.href = "/";
-                    }, 1000);
+                    window.location.href = "/";
                 }
             } else {
                 // REGISTER - client-side validations
