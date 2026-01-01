@@ -187,7 +187,8 @@ module.exports.updateProductStatus = async (req, res) => {
 
 module.exports.getProducts = async (req, res) => {
     try {
-        const products = await productModel.find({}, { bulkPricing: 0, color: 0, material: 0, dimensions: 0, discount: 0, additionalImages: 0 });
+        const products = await productModel.find({}, { bulkPricing: 0, color: 0, material: 0, dimensions: 0, discount: 0, additionalImages: 0 })
+            .sort({ createdAt: -1 });
         return res.status(200).json({ status: true, products });
     } catch (err) {
         return res.status(500).json({ status: false, message: "Internal Sever Error" });
@@ -201,7 +202,7 @@ module.exports.newArrivals = async (req, res) => {
             { bulkPricing: 0, color: 0, material: 0, dimensions: 0, discount: 0, additionalImages: 0 }
 
         )
-            .sort({ createdAt: 1 })
+            .sort({ createdAt: -1 })
             .limit(48);
         return res.status(200).json({ status: true, products });
     } catch (err) {
@@ -331,7 +332,8 @@ module.exports.getProductsByCategory = async (req, res) => {
 
         const products = await productModel
             .find({ category: categoryId })
-            .select("productName unitPrice minimumOrderQuantity mainImage taxType taxRate");
+            .select("productName unitPrice minimumOrderQuantity mainImage taxType taxRate")
+            .sort({ createdAt: -1 });
 
         if (products.length === 0) {
             return res.status(404).json({ status: false, message: "No products found in this category" });
@@ -379,7 +381,7 @@ module.exports.searchProducts = async (req, res) => {
 
         const products = await productModel.find({
             productName: { $regex: searchTerm, $options: "i" }
-        })
+        }).sort({ createdAt: -1 });
 
         return res.status(200).json({ status: true, products });
 
