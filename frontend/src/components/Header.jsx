@@ -1,5 +1,6 @@
 import { useContext, useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import {
     Search,
     ShoppingCart,
@@ -26,6 +27,30 @@ export default function Header() {
     const { cart, setCart } = useCart();
     const userMenuRef = useRef(null);
     const mobileMenuRef = useRef(null);
+
+    useEffect(() => {
+        const fetchCartData = async () => {
+            try {
+                const response = await axios.get("/users/cartData",
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
+                        }
+                    }
+                );
+                if (response.data.cart.items) {
+                    setCart(response.data.cart.items);
+                } else {
+                    setCart([]);
+                }
+            } catch (err) {
+
+            }
+        }
+
+        fetchCartData();
+    }, [setCart]);
 
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 20);
