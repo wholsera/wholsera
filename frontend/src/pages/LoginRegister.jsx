@@ -44,7 +44,9 @@ export default function AuthHeroPage() {
                 if (response.status === 200) {
                     toast.success("Login Successful 🎉");
                     login(data);
-                    setTimeout(() => navigate("/"), 1000);
+                    setTimeout(() => {
+                        window.location.href = "/";
+                    }, 1000);
                 }
             } else {
                 // REGISTER - client-side validations
@@ -78,7 +80,9 @@ export default function AuthHeroPage() {
                 if (response.status === 200) {
                     toast.success("Account Created Successfully 🎊");
                     login(data);
-                    setTimeout(() => navigate("/"), 1500);
+                    setTimeout(() => {
+                        window.location.href = "/";
+                    }, 1000);
                 }
             }
         } catch (error) {
