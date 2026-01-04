@@ -13,8 +13,7 @@ router.post("/register", [
 ], registerUser);
 
 router.post("/login", [
-    body("email").isEmail().withMessage("Invalid Email"),
-    body("password").isLength({ min: 3 }).withMessage("Password must be atleast 6 character long")
+    body("password").isLength({ min: 6 }).withMessage("Password must be atleast 6 character long")
 ], loginUser);
 
 router.post("/createOrder", authUser, createOrder);

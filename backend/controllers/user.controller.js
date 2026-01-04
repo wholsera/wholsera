@@ -72,9 +72,11 @@ module.exports.loginUser = async (req, res) => {
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { email, password } = req.body;
+        const { identifier, password } = req.body;
 
-        const user = await userModel.findOne({ email }).select("+password");
+        const isEmail = identifier.includes("@");
+
+        const user = isEmail ? await userModel.findOne({ email: identifier }).select("+password") : await userModel.findOne({ contactNo: identifier }).select("+password");
 
         if (!user) {
             return res.status(401).json({ message: "Invalid email and password" });

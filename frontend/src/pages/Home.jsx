@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { ArrowRight, ShoppingBag, ShoppingCart, Sparkles, TrendingUp, Package, Users, Zap, Star, ChevronRight, Award, Shield, Truck, Clock, CheckCircle, Play, Quote, ArrowUpRight, BarChart3, DollarSign, Target, Gift, Bell, Heart, MessageCircle, Phone } from 'lucide-react';
+import { ArrowRight, ShoppingCart, Star, Shield, Truck, DollarSign, Gift, MessageCircle, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Carousel from '../components/Carousel';
+import WhatsAppIcon from '../components/WhatsAppIcon';
 import ProductCard from '../components/ProductCard';
 
 export default function WholseraHomepage() {
@@ -292,6 +293,8 @@ export default function WholseraHomepage() {
                     </div>
                 </div>
             </section>
+
+            <WhatsAppIcon />
         </div>
     );
 }

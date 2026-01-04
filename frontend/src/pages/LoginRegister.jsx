@@ -16,7 +16,8 @@ export default function AuthHeroPage() {
         confirmPassword: '',
         fullName: '',
         company: '',
-        contactNo: ''
+        contactNo: '',
+        identifier: '' //accept email or phone number for login form
     });
 
     const navigate = useNavigate();
@@ -32,19 +33,52 @@ export default function AuthHeroPage() {
     const isValidPhone = (phone) =>
         /^[6-9]\d{9}$/.test(phone) && !/^(\d)\1{9}$/.test(phone);
 
+    const isValidEmail = (email) =>
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
         try {
             if (isLogin) {
-                // LOGIN
-                const response = await axios.post(`/users/login`, { email: formData.email, password: formData.password });
-                const data = response.data;
-                if (response.status === 200) {
-                    toast.success("Login Successful 🎉");
-                    login(data);
-                    window.location.href = "/";
+                const identifier = formData.identifier.trim();
+
+                if (!identifier) {
+                    toast.error("Please enter email or phone number");
+                    return;
+                }
+
+                // EMAIL LOGIN
+                if (isValidEmail(identifier)) {
+                    const response = await axios.post(`/users/login`, {
+                        identifier,
+                        password: formData.password
+                    });
+
+                    if (response.status === 200) {
+                        toast.success("Login Successful 🎉");
+                        login(response.data);
+                        window.location.href = "/";
+                    }
+                }
+                // PHONE LOGIN
+                else if (isValidPhone(identifier)) {
+                    const response = await axios.post(`/users/login`, {
+                        identifier,
+                        password: formData.password
+                    });
+
+                    if (response.status === 200) {
+                        toast.success("Login Successful 🎉");
+                        login(response.data);
+                        window.location.href = "/";
+                    }
+                }
+                // INVALID INPUT
+                else {
+                    toast.error("Enter a valid email or phone number");
+                    return;
                 }
             } else {
                 // REGISTER - client-side validations
@@ -110,7 +144,8 @@ export default function AuthHeroPage() {
             confirmPassword: '',
             fullName: '',
             company: '',
-            contactNo: ''
+            contactNo: '',
+            identifier: ''
         });
     };
 
@@ -226,10 +261,10 @@ export default function AuthHeroPage() {
                             <div className="relative">
                                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                                 <input
-                                    type="email"
-                                    name="email"
-                                    placeholder="Business Email"
-                                    value={formData.email}
+                                    type={isLogin ? "text" : "email"}
+                                    name={isLogin ? "identifier" : "email"}
+                                    placeholder={isLogin ? "Email or Phone Number" : "Email"}
+                                    value={isLogin ? formData.identifier : formData.email}
                                     onChange={handleInputChange}
                                     className="w-full pl-10 pr-4 py-3 bg-black/40 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                                     required
