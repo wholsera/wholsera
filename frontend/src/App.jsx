@@ -30,6 +30,9 @@ const OrderSuccess = lazy(() => import("./pages/OrderSuccess"));
 const CustomerProfile = lazy(() => import("./pages/CustomerProfile"));
 const ManageOrders = lazy(() => import("./pages/ManageOrders"));
 const SearchPage = lazy(() => import("./pages/SearchPage"));
+const TermsAndConditions = lazy(() => import("./pages/TermsAndConditions"));
+const ShippingPolicy = lazy(() => import("./pages/ShippingPolicy"));
+const AboutPage = lazy(() => import("./pages/AboutWholsera"));
 
 function App() {
   return (
@@ -50,6 +53,9 @@ function App() {
             <Route path="/product/:id" element={<ViewProductPage />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/shop-by-category/:id" element={<ShopByCategory />} />
+            <Route path="/terms" element={<TermsAndConditions />} />
+            <Route path="/shipping" element={<ShippingPolicy />} />
+            <Route path="/about" element={<AboutPage />} />
           </Route>
 
           {/* Admin routes */}

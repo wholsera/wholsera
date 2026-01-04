@@ -26,10 +26,10 @@ export default function Footer() {
                     <div>
                         <h4 className="font-semibold mb-4 tracking-wide">About Wholesera</h4>
                         <ul className="space-y-2 text-gray-400 text-sm">
-                            <li><a href="#" className="hover:text-white transition">About Us</a></li>
-                            <li><a href="#" className="hover:text-white transition">Shipping Policy</a></li>
-                            <li><a href="#" className="hover:text-white transition">Terms & Condition</a></li>
-                            <li><a href="#" className="hover:text-white transition">Support</a></li>
+                            <li><Link to="/about" className="hover:text-white transition">About Us</Link></li>
+                            <li><Link to="/shipping" className="hover:text-white transition">Shipping Policy</Link></li>
+                            <li><Link to="/terms" className="hover:text-white transition">Terms & Condition</Link></li>
+                            <li><Link to="#" className="hover:text-white transition">Support</Link></li>
                         </ul>
                     </div>
 
@@ -37,8 +37,8 @@ export default function Footer() {
                     <div>
                         <h4 className="font-semibold mb-4 tracking-wide">Quick Links</h4>
                         <ul className="space-y-2 text-gray-400 text-sm">
-                            <li><a href="#" className="hover:text-white transition">New Arrivals</a></li>
-                            <li><a href="#" className="hover:text-white transition">Explore</a></li>
+                            <li><Link to="/explore" className="hover:text-white transition">New Arrivals</Link></li>
+                            <li><Link to="/explore" className="hover:text-white transition">Explore</Link></li>
                         </ul>
                     </div>
 
