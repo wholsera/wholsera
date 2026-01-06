@@ -188,8 +188,10 @@ module.exports.updateProductStatus = async (req, res) => {
 module.exports.getProducts = async (req, res) => {
     try {
         const products = await productModel.find({}, { bulkPricing: 0, color: 0, material: 0, dimensions: 0, discount: 0, additionalImages: 0 })
+            .populate("category", "name")
             .sort({ createdAt: -1 });
-        return res.status(200).json({ status: true, products });
+        const categories = await categoryModel.find().select("name");
+        return res.status(200).json({ status: true, products, categories });
     } catch (err) {
         return res.status(500).json({ status: false, message: "Internal Sever Error" });
     }

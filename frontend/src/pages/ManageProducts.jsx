@@ -59,25 +59,12 @@ const ManageProducts = () => {
                 }
             });
             setProducts(response.data.products);
+            setCategories(response.data.categories);
         } catch (error) {
             toast.error("Failed to fetch products");
             console.error("Error fetching products:", error);
         } finally {
             setLoading(false);
-        }
-    };
-
-    const fetchCategories = async () => {
-        try {
-            const response = await axios.get("/admin/categories", {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("wholseraToken")}`
-                }
-            });
-            setCategories(response.data.categories);
-        } catch (error) {
-            console.error("Error fetching categories:", error);
         }
     };
 
@@ -221,11 +208,22 @@ const ManageProducts = () => {
 
     // Filter products based on search term and filters
     const filteredProducts = products.filter(product => {
-        const matchesSearch = product.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            product.sku.toLowerCase().includes(searchTerm.toLowerCase()) || product.category.toLowerCase().includes(searchTerm.toLowerCase());
+
+        const createdAtStr = new Date(product.createdAt)
+            .toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric"
+            })
+            .toLowerCase();
+
+        const matchesSearch =
+            product.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            product.subcategory.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            createdAtStr.includes(searchTerm.toLowerCase());
 
         const matchesStatus = statusFilter === 'all' || product.status === statusFilter;
-        const matchesCategory = categoryFilter === 'all' || product.category === categoryFilter;
+        const matchesCategory = categoryFilter === 'all' || product.category?.name === categoryFilter;
 
         return matchesSearch && matchesStatus && matchesCategory;
     });
@@ -346,12 +344,13 @@ const ManageProducts = () => {
                                         className="bg-gray-700 border border-gray-600 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     >
                                         <option value="all">All Categories</option>
-                                        <option value="electronics">Electronics</option>
-                                        <option value="machinery">Machinery</option>
-                                        <option value="office-supplies">Office Supplies</option>
-                                        <option value="raw-materials">Raw Materials</option>
-                                        <option value="tools">Tools & Equipment</option>
-                                        <option value="software">Software</option>
+                                        {categories.length === 0 ? (
+                                            <option>No Categories</option>
+                                        ) : (
+                                            categories.map((category) => (
+                                                <option value={category.name}>{category.name}</option>
+                                            ))
+                                        )}
                                     </select>
                                 </div>
                             </div>
@@ -415,7 +414,7 @@ const ManageProducts = () => {
                                                         </div>
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
-                                                        <div className="text-sm text-gray-300">{new Date(product.createdAt).toLocaleDateString()}</div>
+                                                        <div className="text-sm text-gray-300">{new Date(product.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</div>
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
                                                         <div className="text-sm text-gray-300 capitalize">{product.subcategory}</div>
