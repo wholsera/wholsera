@@ -819,7 +819,6 @@ const AddProduct = () => {
                         </form>
                     </div>
                 </main>
-                <Toaster position="top-center" reverseOrder={false} />
             </div>
         </div>
     );

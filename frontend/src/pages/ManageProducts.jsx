@@ -378,10 +378,10 @@ const ManageProducts = () => {
                                                     Product
                                                 </th>
                                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                                    SKU
+                                                    Created At
                                                 </th>
                                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                                    Category
+                                                    Sub Category
                                                 </th>
                                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                                     Price
@@ -415,10 +415,10 @@ const ManageProducts = () => {
                                                         </div>
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
-                                                        <div className="text-sm text-gray-300">{product.sku}</div>
+                                                        <div className="text-sm text-gray-300">{new Date(product.createdAt).toLocaleDateString()}</div>
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
-                                                        <div className="text-sm text-gray-300 capitalize">{product.category}</div>
+                                                        <div className="text-sm text-gray-300 capitalize">{product.subcategory}</div>
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
                                                         <div className="text-sm text-gray-300">₹{product.unitPrice}</div>
@@ -666,8 +666,6 @@ const ManageProducts = () => {
                         </div>
                     </div>
                 )}
-
-                <Toaster position="top-center" reverseOrder={false} />
             </div>
         </div>
     );

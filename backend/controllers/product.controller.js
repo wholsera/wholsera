@@ -310,7 +310,7 @@ module.exports.updateCartQuantity = async (req, res) => {
 module.exports.getProductDetail = async (req, res) => {
     try {
         const productId = req.params.productId;
-        const product = await productModel.findById(productId);
+        const product = await productModel.findById(productId).populate("category", "name");
         if (!product) {
             return res.status(404).json({ status: false, message: "Product Not found" });
         }

@@ -5,7 +5,7 @@ export default function WhatsAppIcon() {
         <>
             {/* Floating WhatsApp Button */}
             <a
-                href="https://wa.me/917982133795?text=Hello%20Wholsera%20Team!%20I%20need%20help%20with%20bulk%20orders."
+                href="https://wa.me/917982133795?text=Hello%20Wholsera%20Team%2C%20I%20need%20help%20with%20bulk%20orders%21"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="fixed bottom-6 right-6 z-50"

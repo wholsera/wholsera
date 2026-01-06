@@ -139,10 +139,10 @@ export default function ProductView() {
                             </div> */}
                             <div className="flex flex-wrap items-center gap-2">
                                 <span className="text-xs px-3 py-1 rounded-full bg-blue-500/20 border border-blue-500/40 text-blue-400">
-                                    SKU: {product.sku}
+                                    Category: {product.category.name}
                                 </span>
                                 <span className="text-xs px-3 py-1 rounded-full bg-green-500/20 border border-green-500/40 text-green-400">
-                                    {product.category}
+                                    {product.subcategory}
                                 </span>
                             </div>
                         </div>
@@ -301,7 +301,7 @@ export default function ProductView() {
                                 <div className="flex justify-between text-gray-400">
                                     <span>Category:</span>
                                     <span className="font-semibold text-white">
-                                        {product.category}
+                                        {product.category.name}
                                     </span>
                                 </div>
                                 <div className="flex justify-between text-gray-400">
