@@ -211,3 +211,32 @@ module.exports.getOrderItems = async (req, res) => {
         return res.status(500).json({ status: false, message: "Internal server error" });
     }
 };
+
+module.exports.getSalesInsights = async (req, res) => {
+    try {
+        const [orderDetailsAgg, totalCustomers, totalProducts] = await Promise.all([
+
+            orderModel.aggregate([
+                {
+                    $facet: {
+                        totalOrders: [{ $count: "count" }],
+                        pendingOrders: [{ $match: { status: "pending" } }, { $count: "count" }],
+                        deliveredOrders: [{ $match: { status: "delivered" } }, { $count: "count" }],
+                        totalOrderValue: [{ $group: { _id: null, totalSum: { $sum: "$grandTotal" } } }],
+                    }
+                }
+            ]),
+
+            userModel.countDocuments({}),
+
+            productModel.countDocuments({ status: "active" })
+        ]);
+
+        const orderDetails = orderDetailsAgg[0];
+
+        return res.status(200).json({ status: true, orderDetails, totalCustomers, totalProducts });
+
+    } catch (err) {
+        return res.status(500).json({ status: false, message: "Internal server error" });
+    }
+}

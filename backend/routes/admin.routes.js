@@ -2,11 +2,12 @@ const express = require("express");
 const router = express.Router();
 const upload = require("../config/multer");
 
-const { getCustomers, addCategory, deleteCategory, getCategories, addSubCategory, deleteSubcategory, getOrders, updateOrderStatus, getOrderItems } = require("../controllers/admin.controller");
+const { getCustomers, addCategory, deleteCategory, getCategories, addSubCategory, deleteSubcategory, getOrders, updateOrderStatus, getOrderItems, getSalesInsights } = require("../controllers/admin.controller");
 const { authUser, adminAuth } = require("../middlewares/auth.middleware");
 
 router.get("/customers", authUser, adminAuth, getCustomers);
 router.get("/categories", getCategories);
+router.get("/salesInsight", authUser, adminAuth, getSalesInsights);
 router.get("/orders", authUser, adminAuth, getOrders);
 router.get("/orders/orderItems/:orderId", authUser, adminAuth, getOrderItems);
 router.post("/orders/updateStatus/:orderId", authUser, adminAuth, updateOrderStatus);

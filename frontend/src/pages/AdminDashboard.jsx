@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
+import axios from "axios";
 import {
     Users,
     ShoppingCart,
@@ -16,16 +17,14 @@ import {
 
 const AdminDashboard = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
-
-    // Sample data - replace with your actual data
-    const stats = {
-        totalOrders: 1247,
-        totalCustomers: 89,
-        totalOrderValue: 156789,
-        activeProducts: 234,
-        pendingOrders: 23,
-        monthlyGrowth: 12.5
-    };
+    const [statsData, setStatsData] = useState({
+        totalCustomers: "",
+        totalOrders: "",
+        totalOrderValue: "",
+        totalProducts: "",
+        pendingOrders: "",
+        deliveredOrders: ""
+    })
 
     const navigationItems = [
         { name: 'Dashboard', icon: TrendingUp, active: true, path: "/admin" },
@@ -36,6 +35,26 @@ const AdminDashboard = () => {
         { name: 'Orders', icon: ShoppingCart, path: "/manage-orders" },
         { name: 'Go to Website', icon: Earth, path: "/" }
     ];
+
+    useEffect(() => {
+        async function getInsights() {
+            try {
+                const result = await axios.get("/admin/salesInsight");
+                setStatsData({
+                    totalCustomers: result.data.totalCustomers || 0,
+                    totalOrders: result.data.orderDetails?.totalOrders?.[0]?.count || 0,
+                    totalOrderValue: result.data.orderDetails?.totalOrderValue?.[0]?.totalSum || 0,
+                    totalProducts: result.data.totalProducts || 0,
+                    pendingOrders: result.data.orderDetails?.pendingOrders?.[0]?.count || 0,
+                    deliveredOrders: result.data.orderDetails?.deliveredOrders?.[0]?.count || 0
+                });
+            } catch (error) {
+                console.error("Failed to fetch insights", error);
+            }
+        }
+
+        getInsights();
+    }, []);
 
     const StatCard = ({ title, value, icon: Icon, subtitle, trend }) => (
         <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 hover:bg-gray-750 transition-colors">
@@ -128,46 +147,46 @@ const AdminDashboard = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                         <StatCard
                             title="Total Orders"
-                            value={stats.totalOrders.toLocaleString()}
+                            value={statsData.totalOrders.toLocaleString()}
                             icon={ShoppingCart}
-                            subtitle={`${stats.pendingOrders} pending`}
-                            trend={stats.monthlyGrowth}
+                            subtitle={`${statsData.pendingOrders} pending`}
+                        // trend={stats.monthlyGrowth}
                         />
 
                         <StatCard
                             title="Total Customers"
-                            value={stats.totalCustomers}
+                            value={statsData.totalCustomers}
                             icon={Users}
                             subtitle="Active customers"
                         />
 
                         <StatCard
                             title="Total Order Value"
-                            value={`₹${stats.totalOrderValue.toLocaleString()}`}
+                            value={`₹${statsData.totalOrderValue.toLocaleString()}`}
                             icon={IndianRupee}
-                            subtitle="This month"
-                            trend={8.2}
+                            subtitle="Overall Sales"
+                        // trend={8.2}
                         />
 
                         <StatCard
                             title="Active Products"
-                            value={stats.activeProducts}
+                            value={statsData.totalProducts}
                             icon={Package}
                             subtitle="In inventory"
                         />
 
                         <StatCard
                             title="Pending Orders"
-                            value={stats.pendingOrders}
+                            value={statsData.pendingOrders}
                             icon={ShoppingCart}
                             subtitle="Needs attention"
                         />
 
                         <StatCard
-                            title="Monthly Growth"
-                            value={`${stats.monthlyGrowth}%`}
+                            title="Delivered Orders"
+                            value={`${statsData.deliveredOrders}`}
                             icon={TrendingUp}
-                            subtitle="Revenue increase"
+                            subtitle="Till Date"
                         />
                     </div>
 

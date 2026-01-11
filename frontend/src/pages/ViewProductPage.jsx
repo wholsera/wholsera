@@ -86,11 +86,11 @@ export default function ProductView() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Main Image */}
                     <div className="space-y-6 mt-10">
-                        <div className="relative w-full h-85 sm:h-110 md:h-130 rounded-2xl overflow-hidden border border-gray-700 mb-4 aspect-square sm:aspect-[16/9]">
+                        <div className="relative w-full h-85 sm:h-110 md:h-125 rounded-2xl overflow-hidden border border-gray-700 mb-4 aspect-square sm:aspect-[16/9]">
                             <img
                                 src={selectedImage}
                                 alt={product.productName}
-                                className="w-full h-full object-fit"
+                                className="w-full h-full object-contain"
                             />
                             {product.discount > 0 && (
                                 <div className="absolute top-4 right-4 bg-gradient-to-r from-orange-500 to-pink-500 px-3 py-1.5 rounded-full font-semibold text-sm">
@@ -122,7 +122,7 @@ export default function ProductView() {
 
                     <div className="space-y-6 mt-[-22px] md:mt-8">
                         <div>
-                            <h1 className="text-3xl sm:text-4xl font-black mb-3 leading-tight">
+                            <h1 className="text-3xl sm:text-4xl font-medium mb-3 leading-tight">
                                 {product.productName}
                             </h1>
                             {/* <div className="flex items-center gap-1 mb-2">
