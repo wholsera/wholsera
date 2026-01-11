@@ -19,6 +19,7 @@ export default function ProductView() {
     const [product, setProduct] = useState(null);
     const [quantity, setQuantity] = useState(6);
     const [selectedImage, setSelectedImage] = useState("");
+    const [addToCartLoader, setAddToCartLoader] = useState(false);
     const { addToCart } = useCart();
 
     useEffect(() => {
@@ -64,8 +65,16 @@ export default function ProductView() {
         return total;
     };
 
-    const handleAddToCart = (product, moq) => {
-        addToCart(product, quantity);
+    const handleAddToCart = async (product, moq) => {
+        setAddToCartLoader(true);
+
+        try {
+            await addToCart(product, moq);
+        } catch (error) {
+            console.error("Add to cart error:", error);
+        } finally {
+            setAddToCartLoader(false);
+        }
     };
 
     return (
@@ -208,12 +217,46 @@ export default function ProductView() {
                                         <Plus size={18} />
                                     </button>
 
-                                    <button onClick={() => handleAddToCart(product, quantity)} className="group relative flex-1 px-6 py-4 rounded-xl font-bold overflow-hidden cursor-pointer min-w-[200px]">
-                                        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-orange-500 transition-transform group-hover:scale-105"></div>
-                                        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-orange-500 blur-xl opacity-40"></div>
-                                        <span className="relative flex items-center justify-center">
-                                            <ShoppingCart className="mr-2" size={20} /> Add to Cart
-                                        </span>
+                                    <button
+                                        onClick={() => handleAddToCart(product, quantity)}
+                                        className="group relative flex-1 px-6 py-4 rounded-xl font-bold overflow-hidden cursor-pointer min-w-[200px]"
+                                        disabled={addToCartLoader}
+                                    >
+                                        {addToCartLoader === true ? (
+                                            <>
+                                                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-orange-500 transition-transform group-hover:scale-105"></div>
+                                                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-orange-500 blur-xl opacity-40"></div>
+                                                <span className="relative flex items-center justify-center">
+                                                    <svg
+                                                        className="w-4 h-4 animate-spin text-white"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <circle
+                                                            cx="12"
+                                                            cy="12"
+                                                            r="10"
+                                                            stroke="currentColor"
+                                                            strokeWidth="4"
+                                                            fill="none"
+                                                            className="opacity-25"
+                                                        />
+                                                        <path
+                                                            fill="currentColor"
+                                                            className="opacity-75"
+                                                            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                                                        />
+                                                    </svg>
+                                                </span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-orange-500 transition-transform group-hover:scale-105"></div>
+                                                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-orange-500 blur-xl opacity-40"></div>
+                                                <span className="relative flex items-center justify-center">
+                                                    <ShoppingCart className="mr-2" size={20} /> Add to Cart
+                                                </span>
+                                            </>
+                                        )}
                                     </button>
                                 </div>
 
