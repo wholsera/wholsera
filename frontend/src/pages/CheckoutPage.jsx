@@ -368,7 +368,7 @@ export default function CheckoutPage() {
                                 className="w-full bg-gradient-to-r from-orange-500 via-pink-500 to-purple-500 text-white py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/40 transition-all duration-300 cursor-pointer"
                             >
                                 <CreditCard size={22} />
-                                Pay ₹{total.toFixed(2)}
+                                Place Order ₹{total.toFixed(2)}
                             </button>
 
                             <div className="mt-6 space-y-3">
